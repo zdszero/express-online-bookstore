@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" rel="stylesheet" href="/layui/css/modules/layer/default/layer.css">
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <title>register</title>
+    <style>
+* {
+  text-align: center;
+}
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background-image: url('../images/login_background.jpg');
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+
+    .margin-v {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .line-layout {
+      width: inherit;
+      height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: frams 20s infinite;
+    }
+
+    .line-layout-st {
+      flex-direction: column;
+      justify-content: start;
+      align-items: center;
+    }
+
+    .viewbox {
+      display: block;
+      width: 350px;
+      height: 630px;
+      background: #263238;
+      border-radius: 16px;
+      opacity: 0.85;
+      backdrop-filter: blur(5px);
+      box-shadow: rgba(5, 5, 5, 0.5) 5px 3px 10px;
+    }
+
+    .line-item {
+      /* margin-top: 2px; */
+      margin-bottom: 20px;
+    }
+
+    input.input-box {
+      text-align: start;
+      width: 260px;
+      height: 32px;
+      line-height: 1.2;
+      padding-left: 10px;
+      border-radius: 5px;
+      border: #3f4c51 solid 2px;
+      color: #bdcada;
+      outline: none;
+      transition: all ease-in-out 0.2s;
+      background-color: #323e44;
+    }
+
+    img.captcha {
+      height: 28px;
+      line-height: 1.2;
+      border-radius: 5px;
+      opacity: 0.85;
+    }
+
+    a#cg-captcha {
+      top: 10px;
+    }
+
+    #select-item {
+      position: relative;
+      left: 50px;
+      display: flex;
+      justify-content: space-between;
+      width: 260px;
+      height: 30px;
+    }
+
+    .sign-text {
+      position: relative;
+      top: 5px;
+      color: #bdcada;
+    }
+
+    select {
+      width: 200px;
+      padding: 2px;
+      border-radius: 5px;
+      color: #bdcada;
+      background-color: #323e44;
+    }
+
+    input.input-box-captcha {
+      width: 180px;
+    }
+
+    input.input-box:-internal-autofill-previewed,
+    input.input-box:-internal-autofill-selected {
+      -webkit-text-fill-color: #FFFFFF !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+    }
+
+    input.input-box::-webkit-input-placeholder {
+      /* WebKit browsers 适配谷歌 */
+      color: #bdcada;
+    }
+
+    input.input-box:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 适配火狐 */
+      color: #bdcada;
+    }
+
+    input.input-box::-moz-placeholder {
+      /* Mozilla Firefox 19+ 适配火狐 */
+      color: #bdcada;
+    }
+
+    input.input-box:-ms-input-placeholder {
+      /* Internet Explorer 10+  适配ie*/
+      color: #bdcada;
+    }
+
+    input.input-box:focus {
+      border: #64ffda solid 2px;
+    }
+
+    input.submit-btn {
+      /* width: 260px; */
+      width: 150px;
+      height: 32px;
+      line-height: 1.2;
+      border-radius: 5px;
+      /* border: #3f4c51 solid 2px; */
+      outline: none;
+      transition: all ease-in-out 0.2s;
+      background: #7e9868;
+      border: none;
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    input.submit-btn:hover {
+      background: #c3e88d;
+    }
+
+    input.submit-btn:active {
+      background: #a2c076;
+    }
+
+    .title-text {
+      color: #7abfbb;
+    }
+    </style>
+  </head>
+
+  <body>
+    <div class="line-layout">
+      <div class="viewbox">
+        <div class="line-layout-st margin-v">
+          <h2 class="title-text">Register</h2>
+          <form>
+            <div class="line-item">
+              <input type="text" placeholder="account" name="account" class="input-box" />
+            </div>
+            <div class="line-item">
+              <input type="text" placeholder="your name" name="name" class="input-box" />
+            </div>
+            <div class="line-item">
+              <input type="text" placeholder="phone number" name="phone" class="input-box" />
+            </div>
+            <div class="line-item">
+              <input type="text" placeholder="email" name="email" class="input-box" />
+            </div>
+            <div class="line-item">
+              <input type="text" placeholder="address" name="addr" class="input-box" />
+            </div>
+            <div class="line-item" id="select-item">
+              <span class="sign-text">status</span>
+              <select>
+                <option value="client">client</option>
+                <option value="merchant">merchant</option>
+              </select>
+            </div>
+            <div class="line-item">
+              <input type="password" placeholder="password" name="password" class="input-box" />
+            </div>
+            <div class="line-item">
+              <input type="password" placeholder="confirm password" name="repassword" class="input-box" />
+            </div>
+            <div class="line-item">
+              <input type="password" placeholder="captcha" name="captcha" class=" input-box input-box-captcha" />
+              <a id="cg-captcha">
+                <img class="captcha" src="/captcha" id="captcha" />
+              </a>
+            </div>
+            <div class="line-item">
+              <input type="submit" value="register" class="submit-btn" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="/layui/layui.all.js"></script>
+    <script>
+      var layer = layui.layer
+      layer.msg('hello')
+
+      // change captcha
+      $('#cg-captcha').on('click', () => {
+        $('#captcha').attr('src', '/captcha?');
+      })
+
+      $('form').submit(() => {
+        let json = {
+          account: $('input[name="account"]').val(),
+          name: $('input[name="name"]').val(),
+          phone: $('input[name="phone"]').val(),
+          email: $('input[name="email"]').val(),
+          addr: $('input[name="addr"]').val(),
+          status: $('option:selected').val(),
+          password: $('input[name="password"]').val(),
+          repassword: $('input[name="repassword"]').val(),
+          captcha: $('input[name="captcha"]').val()
+        }
+        console.log('user send:')
+        console.log(json)
+        if (json.account.length < 3) {
+          layer.msg('account is too short')
+          $('input[name="account"]').css('border', '#ff4852 solid 2px')
+          return false
+        }
+        $('input[name="account"]').css('border', '#3f4c51 solid 2px')
+
+        if (json.name === '') {
+          layer.msg('name cannot be empty')
+          $('input[name="name"]').css('border', '#ff4852 solid 2px')
+          return false
+        }
+        $('input[name="name"]').css('border', '#3f4c51 solid 2px')
+
+        const phoneRegex = /^\d{10}$/
+        if (phoneRegex.test(json.phone) === false) {
+          layer.msg('phone number is not valid')
+          $('input[name="phone"]').css('border', '#ff4852 solid 2px')
+          return false
+        }
+        $('input[name="phone"]').css('border', '#3f4c51 solid 2px')
+
+        const mailRegex = /^\w+@\w+\.com$/
+        if (mailRegex.test(json.email) === false) {
+          layer.msg('email is not valid')
+          $('input[name="email"]').css('border', '#ff4852 solid 2px')
+          return false
+        }
+        $('input[name="email"]').css('border', '#3f4c51 solid 2px')
+
+        if (json.addr === '') {
+            layer.msg('address cannot be null')
+            $('input[name="addr"]').css('border', '#ff4852 solid 2px')
+            return false
+        }
+        $('input[name="addr"]').css('border', '#3f4c51 solid 2px')
+
+        if (json.password.length < 4) {
+          alert('password is too short!');
+          $('input[name="password"]').css('border', '#ff4852 solid 2px');
+          return false;
+        }
+        if (json.repassword != json.password) {
+          alert('two passwords are not the same!');
+          $('input[name="repassword"]').css('border', '#ff4852 solid 2px');
+          return false;
+        }
+        $('input[name="password"]').css('border', '#3f4c51 solid 2px');
+
+        $.ajax({
+          url: '/registerReq',
+          data: json,
+          dataType: 'text',
+          type: 'post',
+          success: (data) => {
+            let res = JSON.parse(data)
+            if (res.code === 0) {
+              alert('register succeeded')
+            } else if (res.code === 1) {
+              alert('wrong captcha')
+            } else {
+              alert('register failed')
+            }
+          }
+        })
+        return false;
+      })
+    </script>
+
+  </body>
+
+</html>

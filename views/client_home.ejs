@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link rel="stylesheet" href="/layui/css/modules/layer/defalt/layer.css">
+  <title>client home</title>
+  <style>
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgb(231, 226, 221);
+  z-index: 1;
+}
+
+.nav-icon {
+  position: relative;
+  left: 40px;
+  width: 120px;
+  font-size: 1.5rem;
+}
+
+.logo {
+  position: relative;
+  right: 60px;
+  margin: 0 auto;
+}
+
+.close {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+}
+
+table {
+  border: none;
+  border-collapse: collapse;
+  border-radius: 5px;
+  margin: 0 auto;
+  width: 80%;
+}
+
+th, td {
+  border-bottom: 3px solid #ddd;
+  padding: 5px;
+}
+
+th {
+  background: #dadada;
+}
+
+.quest {
+  position: absolute;
+  border: 3px solid;
+  border-radius: 5px;
+  padding: 10px;
+  left: -50%;
+  top: 30%;
+  transform: translate(-50%, 0);
+  background-color: #ddd;
+}
+
+.quest-type {
+  padding: 5px;
+}
+
+.submit {
+  border: 1px solid;
+}
+
+span {
+  font-size: 14px;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+  </style>
+</head>
+<body>
+  <!-- floating window -->
+  <div class="quest">
+    <i class="fa fa-times close" aria-hidden="true"></i>
+    <span>quest</span><br>
+    <div class="quest-type">
+      <span>quest type</span>
+      <select>
+        <option value="change">change information</option>
+        <option value="advice">advice</option>
+        <option value="question">question</option>
+      </select>
+    </div>
+    <span>detail:</span><br>
+    <textarea cols="30" rows="10"></textarea><br>
+    <button class="submit">submit</button>
+  </div>
+  <!-- end of floating window -->
+  <!-- navigation bar -->
+  <nav class="navbar">
+    <div class="nav-icon">
+      <i class="fa fa-plus-square" aria-hidden="true"></i>
+      <span>add quest</span>
+    </div>
+    <img src="images/logo2.jpg" alt="store logo" class="logo" />
+  </nav>
+  <!-- end of navigation bar -->
+  <!-- information table -->
+  <h1>user data</h1>
+  <table>
+    <tr>
+      <th>Type</th>
+      <th>Value</th>
+    </tr>
+    <tr>
+      <td>account</td>
+      <td><%= user.User_account %></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td><%= user.User_name %></td>
+    </tr>
+    <tr>
+      <td>ID</td>
+      <td><%= user.User_ID %></td>
+    </tr>
+    <tr>
+      <td>phone</td>
+      <td><%= user.User_phone %></td>
+    </tr>
+    <tr>
+      <td>email</td>
+      <td><%= user.User_mail %></td>
+    </tr>
+    <tr>
+      <td>address</td>
+      <td><%= user.User_addr %></td>
+    </tr>
+  </table>
+  <!-- end of information table -->
+  <!-- order list -->
+  <h1>your orders</h1>
+  <table>
+    <tr>
+      <th>bookname</th>
+      <th>store</th>
+      <th>number</th>
+      <th>receiver</th>
+      <th>address</th>
+      <th>order id</th>
+      <th>status</th>
+    </tr>
+    <% for (let i = 0; i < orders.length; i++) { %>
+    <tr>
+      <td><%= orders[i].Order_Book %></td>
+      <td><%= orders[i].Order_Store %></td>
+      <td><%= orders[i].Order_Booknum %></td>
+      <td><%= orders[i].Order_Receiver %></td>
+      <td><%= orders[i].Order_addr %></td>
+      <td><%= orders[i].Order_id %></td>
+      <td><%= orders[i].Order_status %></td>
+    </tr>
+    <% } %>
+  </table>
+  <!-- end of order list -->
+</body>
+<script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script>
+  layer = layui.layer
+  layer.msg('hello')
+  $('.fa-plus-square').click(() => {
+    $('.quest').css('left', '50%')
+  })
+  $('.close').click(() => {
+    $('.quest').css('left', '-50%')
+  })
+  json = {
+
+  }
+  $('.submit').click(() => {
+    const detail = $('textarea').val()
+    const kind = $('select').val()
+    if (detail.length < 10) {
+      layer.msg('detail cannot be less than 10 characters')
+      return
+    } else if (detail.length > 200) {
+      layer.msg('detail cannot be more than 200 characters')
+      return
+    } else {
+
+    }
+  })
+</script>
+</html>

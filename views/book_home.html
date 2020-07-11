@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../public/layui/css/layui.css">
+  <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+  <title>book home</title>
+  <style>
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 20px;
+}
+
+span.info-head {
+  position: relative;
+  left: 150px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgb(231, 226, 221);
+  z-index: 1;
+}
+
+.nav-icon {
+  position: relative;
+  left: 20px;
+  top: 5px;
+  width: 160px;
+  font-size: 1.5rem;
+}
+
+.logo {
+  position: relative;
+  right: 60px;
+  margin: 0 auto;
+}
+
+img {
+  width: 250px;
+}
+
+li {
+  margin-top: 10px;
+}
+
+.new-comment {
+  margin: 5px 0;
+}
+
+.book-info {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.info-element {
+  display: inline-block;
+  margin: auto 200px;
+}
+    
+#star {
+  position: relative;
+  bottom: 7px;
+}
+
+textarea {
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+button.submit {
+  font-size: 15px;
+}
+  </style>
+
+</head>
+<body>
+  <!-- navigation bar -->
+  <nav class="navbar">
+    <div class="nav-icon">
+      <img src="images/home.svg" alt="quest">
+    </div>
+    <img src="images/logo2.jpg" alt="logo" class="logo" />
+  </nav>
+  <!-- end of navigation bar -->
+  <div class="book-info">
+    <img src="https://s1.ax1x.com/2020/07/07/UFLVld.jpg" alt="book picture">
+    <div class="info-element">
+      <b><span class="info-head">book information</span></b>
+      <ul>
+        <li><b>name:</b>  Collins Stargazing: Beginners guide to astronomy</li>
+        <li><b>writer:</b> </li>
+        <li><b>tag:</b></li>
+        <li><b>store:</b> </li>
+        <li><b>publisher:</b> </li>
+        <li><b>isbn:</b> </li>
+        <li><b>stock:</b> </li>
+        <li><b>price:</b> </li>
+        <li><b>mark:</b> </li>
+      </ul>
+    </div>
+  </div>
+<div class="layui-tab layui-tab-card">
+  <ul class="layui-tab-title">
+    <li class="layui-this">book intro</li>
+    <li>your comment</li>
+  </ul>
+  <div class="layui-tab-content" style="height: 170px;">
+    <div class="layui-tab-item layui-show">
+      <br>‘A perfect book for anyone looking to start a new hobby or simply have a better understanding of our Universe.’-Firetrench‘<br><br>
+      This accessible and well-presented book would make an ideal gift for any beginner to astronomy – recommended.’ Journa of the British Astronomical Associationl
+    </div>
+    <div class="layui-tab-item">
+      <div class="new-comment">
+        your mark:
+        <div id="star"></div><br>
+        your comment:<br>
+        <textarea cols="130" rows="2" placeholder="comment should be less than 200 characters"></textarea>
+        <button class="submit">submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../public/layui/layui.all.js"></script>
+<script>
+layui.use(['rate'], function () {
+  var rate = layui.rate;
+  rate.render({
+    elem: '#star'
+  })
+})
+
+layui.use('element', function(){
+  var $ = layui.jquery
+  ,element = layui.element;
+});
+</script>
+</body>
+</html>

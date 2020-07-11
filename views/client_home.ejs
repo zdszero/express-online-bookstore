@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-  <link rel="stylesheet" href="/layui/css/modules/layer/defalt/layer.css">
   <title>client home</title>
   <style>
 
@@ -27,8 +26,9 @@ body {
 
 .nav-icon {
   position: relative;
-  left: 40px;
-  width: 120px;
+  left: 20px;
+  top: 5px;
+  width: 160px;
   font-size: 1.5rem;
 }
 
@@ -93,7 +93,6 @@ tr:hover {
   <!-- floating window -->
   <div class="quest">
     <i class="fa fa-times close" aria-hidden="true"></i>
-    <span>quest</span><br>
     <div class="quest-type">
       <span>quest type</span>
       <select>
@@ -110,8 +109,9 @@ tr:hover {
   <!-- navigation bar -->
   <nav class="navbar">
     <div class="nav-icon">
-      <i class="fa fa-plus-square" aria-hidden="true"></i>
-      <span>add quest</span>
+      <img src="images/comment.svg" alt="quest" class="comment">
+      <img src="images/home.svg" alt="quest">
+      <img src="images/Management.svg" alt="manage">
     </div>
     <img src="images/logo2.jpg" alt="store logo" class="logo" />
   </nav>
@@ -180,7 +180,7 @@ tr:hover {
 <script>
   layer = layui.layer
   layer.msg('hello')
-  $('.fa-plus-square').click(() => {
+  $('.comment').click(() => {
     $('.quest').css('left', '50%')
   })
   $('.close').click(() => {

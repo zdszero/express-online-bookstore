@@ -33,6 +33,23 @@ router.get('/clientHome', async (req, res, next) => {
   res.render('client_home', { user: userInfo[0], orders: orders })
 })
 
+router.get('/storeHome', (req, res) => {
+  res.render('storeHome')
+})
+
+router.get('/hello/:name', (req, res) => {
+  console.log(req.params.name)
+  res.send('hello ' + req.params.name + '!')
+})
+
+router.get('/bookHome/:booknum', async (req, res) => {
+  const booknum = req.params.booknum
+  console.log(booknum)
+  const bookInfo = await database.get('select * from t_Book where Book_num = ?', [booknum])
+  console.log(bookInfo[0])
+  res.render('book_home', { book: bookInfo[0] })
+})
+
 router.post('/loginReq', async (req, res) => {
   const username = req.body.username
   const password = req.body.password
@@ -47,6 +64,16 @@ router.post('/loginReq', async (req, res) => {
     })
     res.json({ code: 0 })
   }
+})
+
+router.post('/addBook', async (req, res) => {
+  console.log(req.body)
+  const usernum = req.cookies.usernum
+  const storeInfo = await database.get('select * from t_Store where User_num = ?', [usernum])
+  const book = { ...req.body }
+  book.Store_num = storeInfo[0].Store_num
+  book.Book_Store = storeInfo[0].Store_name
+  console.log(book)
 })
 
 router.post('/addProduct', async (req, res) => {

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="layui/css/layui.css">
+  <title>store home</title>
+  <style>
+
+.navbar {
+  position: sticky;
+  top: 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgb(231, 226, 221);
+  z-index: 1;
+}
+
+.logo {
+  height: 50px;
+  width: 150px;
+  margin: 0 auto;
+}
+
+.layui-form {
+  margin-top: 40px;
+  margin-left: 50px;
+}
+
+.layui-input-block {
+  width: 500px;
+}
+
+.upload {
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  font-size: 20px;
+}
+
+.upimage {
+  margin: 15px 0;
+  border: 1px solid black;
+  width: 300px;
+}
+
+.filebtn {
+  border-radius: 3px;
+  color: #0af;
+}
+  </style>
+</head>
+<body>
+  <!-- navigation bar -->
+  <nav class="navbar">
+    <img src="images/logo2.jpg" alt="logo" class="logo" />
+  </nav>
+  <!-- end of navigation bar -->
+  <form action="/addBook" method="post" class="layui-form layui-form-pane">
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_name">book name:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_name"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_writer">writer:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_writer"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_kind1">kind1:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_kind1"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_kind2">kind2:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_kind2"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_kind3">kind3:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_kind3"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_pub">publisher:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_pub"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_pubnum">isbn:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_pubnum"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_price">price:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_price"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_stock">stock:</label>
+      <div class="layui-input-block">
+        <input lay-verify="required" class="layui-input" autocomplete="off" type="text" name="Book_stock"><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label" for="Book_intro">intro:</label>
+      <div class="layui-input-block">
+        <textarea lay-verify="required" class="layui-textarea" autocomplete="off" extarea name="Book_intro" cols="30" rows="10"></textarea><br>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" lay-submit lay-filter="addBook">submit</button>
+        <button type="reset" class="layui-btn layui-btn-primary">reset</button>
+      </div>
+    </div>
+    <div class="upload">
+      <input class="filebtn" type="file" name="img" id="img" accept="img/*"><br>
+      <img class="upimage" src="images/no-image.jpg" alt="uploaded image">
+    </div>
+  </form>
+<script src="layui/layui.all.js"></script>
+<script>
+layui.use('form', function(){
+  var form = layui.form
+  form.on('submit(addBook)', function (data) {
+    layer.msg(JSON.stringify(data.field))
+    return true
+  })
+})
+</script>
+</body>
+</html>

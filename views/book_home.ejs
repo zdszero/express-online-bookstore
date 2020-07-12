@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../public/layui/css/layui.css">
+  <link rel="stylesheet" href="../layui/css/layui.css">
   <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
   <title>book home</title>
   <style>
@@ -28,17 +28,9 @@ span.info-head {
   z-index: 1;
 }
 
-.nav-icon {
-  position: relative;
-  left: 20px;
-  top: 5px;
-  width: 160px;
-  font-size: 1.5rem;
-}
-
 .logo {
-  position: relative;
-  right: 60px;
+  height: 50px;
+  width: 150px;
   margin: 0 auto;
 }
 
@@ -84,26 +76,23 @@ button.submit {
 <body>
   <!-- navigation bar -->
   <nav class="navbar">
-    <div class="nav-icon">
-      <img src="images/home.svg" alt="quest">
-    </div>
-    <img src="images/logo2.jpg" alt="logo" class="logo" />
+    <img src="../images/logo2.jpg" alt="logo" class="logo" />
   </nav>
   <!-- end of navigation bar -->
   <div class="book-info">
-    <img src="https://s1.ax1x.com/2020/07/07/UFLVld.jpg" alt="book picture">
+    <img src=<%= book.Book_picture %> alt="book picture">
     <div class="info-element">
       <b><span class="info-head">book information</span></b>
       <ul>
-        <li><b>name:</b>  Collins Stargazing: Beginners guide to astronomy</li>
-        <li><b>writer:</b> </li>
-        <li><b>tag:</b></li>
-        <li><b>store:</b> </li>
-        <li><b>publisher:</b> </li>
-        <li><b>isbn:</b> </li>
-        <li><b>stock:</b> </li>
-        <li><b>price:</b> </li>
-        <li><b>mark:</b> </li>
+        <li><b>name:</b>  <%= book.Book_name %></li>
+        <li><b>writer:</b> <%= book.Book_writer %></li>
+        <li><b>tag:</b> <%= book.Book_kind1 %> <b>||</b> <%= book.Book_kind2 %> <b>||</b> <%= book.Book_kind3 %></li>
+        <li><b>store:</b> <%= book.Book_Store %></li>
+        <li><b>publisher:</b> <%= book.Book_pub %></li>
+        <li><b>isbn:</b> <%= book.Book_pubnum %></li>
+        <li><b>stock:</b> <%= book.Book_stock %></li>
+        <li><b>price:</b> <%= book.Book_price %></li>
+        <li><b>mark:</b> <%= book.Book_mark === null ? 'no comment now' : book.Book_mark %></li>
       </ul>
     </div>
   </div>
@@ -114,8 +103,7 @@ button.submit {
   </ul>
   <div class="layui-tab-content" style="height: 170px;">
     <div class="layui-tab-item layui-show">
-      <br>‘A perfect book for anyone looking to start a new hobby or simply have a better understanding of our Universe.’-Firetrench‘<br><br>
-      This accessible and well-presented book would make an ideal gift for any beginner to astronomy – recommended.’ Journa of the British Astronomical Associationl
+      <br><%= book.Book_intro %>
     </div>
     <div class="layui-tab-item">
       <div class="new-comment">
@@ -129,7 +117,7 @@ button.submit {
   </div>
 </div>
 
-<script src="../public/layui/layui.all.js"></script>
+<script src="../layui/layui.all.js"></script>
 <script>
 layui.use(['rate'], function () {
   var rate = layui.rate;

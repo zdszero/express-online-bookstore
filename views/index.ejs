@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <link type="text/css" rel="stylesheet" href="stylesheets/main.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-  <link rel="stylesheet" href="/layui/css/modules/layer/default/layer.css">
+  <link rel="stylesheet" href="layui/css/modules/layer/default/layer.css">
   <script src="https://use.fontawesome.com/ef5e3e3e63.js"></script>
   <title>test</title>
 </head>
@@ -48,7 +48,7 @@
       <!-- single product -->
       <article class="product">
         <div class="img-container">
-          <img src=<%= products[i].image %> alt="product" class="product-img">
+          <img src=<%= products[i].image %> booknum=<%= products[i].id %> alt="product" class="product-img">
           <button class="bag-btn" booknum=<%= products[i].id %>>
             <i class="fas fa-shopping-cart"></i>
             add to cart
@@ -82,7 +82,7 @@
   </section>
   <!-- end of produces -->
   <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
-  <script src="/layui/layui.all.js"></script>
+  <script src="layui/layui.all.js"></script>
   <script>
     /* === VARIABLES === */
     var layer = layui.layer
@@ -97,6 +97,7 @@
     var openCart = document.querySelector('.fa-cart-plus')
     var closeCart = document.querySelector('.close-cart')
     var clearCart = document.querySelector('.clear-cart')
+    var productImages = document.querySelectorAll('.product-img')
     // status 1 -> login in | 0 -> not login in
     var userStatus, usernum
     if (document.cookie.match(/usernum=(\d+)/) === null) {
@@ -177,6 +178,13 @@
             Database.decreaseProduct(id, event.target)
           }
         }
+      })
+      // image click event
+      productImages.forEach(image => {
+        image.addEventListener('click', (event) => {
+          const booknum = event.target.getAttribute('booknum')
+          window.location.href = `/bookHome/${booknum}`
+        })
       })
     }
     /* === CLASSES === */

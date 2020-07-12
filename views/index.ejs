@@ -1,198 +1,229 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <meta charset="utf-8" />
-  <link type="text/css" rel="stylesheet" href="stylesheets/main.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-  <link rel="stylesheet" href="layui/css/modules/layer/default/layer.css">
-  <script src="https://use.fontawesome.com/ef5e3e3e63.js"></script>
-  <title>test</title>
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <link type="text/css" rel="stylesheet" href="stylesheets/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="https://use.fontawesome.com/ef5e3e3e63.js"></script>
+    <title>bookhub</title>
+  </head>
 
-<body>
-  <!-- navigation bar -->
-  <nav class="navbar">
-    <div class="navbar-center">
-      <div class="nav-icon">
-        <i class="fas fa-bars"></i>
-      </div>
-      <img src="images/logo2.jpg" alt="store logo" />
-      <div class="cart-btn">
+  <body>
+    <!-- navigation bar -->
+    <nav class="navbar">
+      <div class="navbar-center">
         <div class="nav-icon">
-          <i class="fa fa-sign-in" aria-hidden="true"></i>
-          <i class="fa fa-user-o" aria-hidden="true"></i>
-          <i class="fa fa-registered" aria-hidden="true"></i>
-          <i class="fas fa-cart-plus"></i>
+          <i class="fas fa-bars"></i>
         </div>
-        <div class="cart-items">0</div>
-      </div>
-    </div>
-  </nav>
-  <!-- end of navigation bar -->
-  <!-- hero -->
-  <header class="hero">
-    <div class="banner">
-      <h1 class="banner-title">books collection</h1>
-      <button class="banner-btn">shop now</button>
-    </div>
-  </header>
-  <!-- end of hero -->
-  <!-- products -->
-  <section class="produces-center">
-    <div class="section-title">
-      <h2>our books</h2>
-    </div>
-    <div class="products-center">
-      <% for (let i = 0; i < products.length; i++) { %>
-      <!-- single product -->
-      <article class="product">
-        <div class="img-container">
-          <img src=<%= products[i].image %> booknum=<%= products[i].id %> alt="product" class="product-img">
-          <button class="bag-btn" booknum=<%= products[i].id %>>
-            <i class="fas fa-shopping-cart"></i>
-            add to cart
-          </button>
-        </div>
-        <h3><%= products[i].title %></h3>
-        <h5 class="<%= products[i].storenum %>"><%= products[i].store %></h5>
-        <h4>$ <%= products[i].price %></h4>
-      </article>
-      <!-- end of single product -->
-      <% } %>
-    </div>
-    <!-- cart -->
-    <div class="cart-overlay">
-      <div class="cart">
-        <span class="close-cart">
-          <i class="fa fa-window-close-o" aria-hidden="true"></i>
-        </span>
-        <h2>your cart</h2>
-        <div class="cart-content">
-          <!-- cart item -->
-          <!-- end of cart item -->
-        </div>
-        <div class="cart-footer">
-          <h3>Your Total : $ <span class="cart-total">0</span></h3>
-          <button class="clear-cart banner-btn">clear cart</button>
+        <img class="logo" src="images/logo.png" alt="store logo" />
+        <div class="cart-btn">
+          <div class="nav-icon">
+            <i class="fa fa-sign-in" aria-hidden="true"></i>
+            <i class="fa fa-user-o" aria-hidden="true"></i>
+            <i class="fa fa-registered" aria-hidden="true"></i>
+            <i class="fas fa-cart-plus"></i>
+          </div>
+          <div class="cart-items">0</div>
         </div>
       </div>
-    </div>
-    <!-- end of cart -->
-  </section>
-  <!-- end of produces -->
-  <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
-  <script src="layui/layui.all.js"></script>
-  <script>
-    /* === VARIABLES === */
-    var layer = layui.layer
-    layer.msg('welcome')
-    var bagButtons = document.querySelectorAll('.bag-btn')
-    var cart = []
-    var cartDOM = document.querySelector('.cart')
-    var cartOverlay = document.querySelector('.cart-overlay')
-    var cartContent = document.querySelector('.cart-content')
-    var cartPriceTotal = document.querySelector('.cart-total')
-    var cartItemsCount = document.querySelector('.cart-items')
-    var openCart = document.querySelector('.fa-cart-plus')
-    var closeCart = document.querySelector('.close-cart')
-    var clearCart = document.querySelector('.clear-cart')
-    var productImages = document.querySelectorAll('.product-img')
-    // status 1 -> login in | 0 -> not login in
-    var userStatus, usernum
-    if (document.cookie.match(/usernum=(\d+)/) === null) {
-      userStatus = 0
-    } else {
-      userStatus = 1
-      usernum = document.cookie.match(/usernum=(\d+)/)[1]
-      console.log('user information in cookie: ' + usernum)
-    }  
+    </nav>
+    <!-- end of navigation bar -->
+    <!-- hero -->
+    <header class="hero">
+      <div class="banner">
+        <h1 class="banner-title">books collection</h1>
+        <button class="banner-btn">shop now</button>
+      </div>
+    </header>
+    <!-- end of hero -->
+    <!-- products -->
+    <section class="produces-center">
+      <div class="section-title">
+        <h2>our books</h2>
+      </div>
+      <div class="products-center">
+        <% for (let i = startPage - 1; i < products.length && i < startPage * 18; i++) { %>
+        <!-- single product -->
+        <article class="product">
+          <div class="img-container">
+            <img src=<%= products[i].image %> booknum=<%= products[i].id %> alt="product" class="product-img">
+            <button class="bag-btn" booknum=<%= products[i].id %>>
+              <i class="fas fa-shopping-cart"></i>
+              add to cart
+            </button>
+          </div>
+          <h3><%= products[i].title %></h3>
+          <h5 class="stores" storenum="<%= products[i].storenum %>"><%= products[i].store %></h5>
+          <h4>$ <%= products[i].price %></h4>
+        </article>
+        <!-- end of single product -->
+        <% } %>
+      </div>
+      <!-- cart -->
+      <div class="cart-overlay">
+        <div class="cart">
+          <span class="close-cart">
+            <i class="fa fa-window-close-o" aria-hidden="true"></i>
+          </span>
+          <h2>your cart</h2>
+          <div class="cart-content">
+            <!-- cart item -->
+            <!-- end of cart item -->
+          </div>
+          <div class="cart-footer">
+            <h3>Your Total : $ <span class="cart-total">0</span></h3>
+            <button class="clear-cart banner-btn">clear cart</button>
+          </div>
+        </div>
+      </div>
+      <!-- end of cart -->
+    </section>
+    <div id="pager"></div>
+    <!-- end of produces -->
 
-    function isInCart (id) {
-      return cart.some(item => id == item.id) // booknum is number, attributes is string
-    }
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="layui/layui.all.js"></script>
+    <script>
+      /* === VARIABLES === */
 
-    function regiserEvents () {
-      // sign in icon
-      $('.fa-sign-in').click(() => {
-        if (userStatus === 0) {
-          window.location.href = '/pages/login.html'
-        } else {
-          layer.msg('you have alreay logined')
-        }     
-    })
-      // user home page
-      $('.fa-user-o').click(() => {
-        if (userStatus === 1) {
-          window.location.href = '/clientHome'
-        } else {
-          layer.msg('you have not logined yet')
+      // layui variables
+      var layer = layui.layer
+      var laypage = layui.laypage
+      layer.msg('welcome')
+      laypage.render({
+        elem: 'pager'
+        ,count: <%= products.length %>
+        ,limit: 18
+        ,jump: (obj, first) => {
+          if (!first) {
+            window.location.href = `/pages/${obj.curr}`
+          }
         }
       })
-      // reigster icon
-      $('.fa-registered').click(() => {
-        window.location.href = '/pages/register.html'
-          })
-      // cart icon
-      $('.fa-cart-plus').click(() => {
-        if (document.cookie.match(/usernum=(\d+)/) === null) {
-          layer.msg('you have not logined yet')
-        } else {
-        }
-      })
-      // add book button
-      bagButtons.forEach((btn) => {
-        const id = btn.getAttribute('booknum')
-        if (isInCart(id)) {
-          btn.innerHTML = 'in cart'
-          btn.disable = true
-        }
-        btn.addEventListener('click', () => {
+
+      // page elements
+      var bagButtons = document.querySelectorAll('.bag-btn')
+      var cart = []
+      var cartDOM = document.querySelector('.cart')
+      var cartOverlay = document.querySelector('.cart-overlay')
+      var cartContent = document.querySelector('.cart-content')
+      var cartPriceTotal = document.querySelector('.cart-total')
+      var cartItemsCount = document.querySelector('.cart-items')
+      var openCart = document.querySelector('.fa-cart-plus')
+      var closeCart = document.querySelector('.close-cart')
+      var clearCart = document.querySelector('.clear-cart')
+      var productImages = document.querySelectorAll('.product-img')
+      var storeReferencee = document.querySelectorAll('.stores')
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]')
+      // status 1 -> login in | 0 -> not login in
+      var userStatus, usernum
+      if (document.cookie.match(/usernum=(\d+)/) === null) {
+        userStatus = 0
+      } else {
+        userStatus = 1
+        usernum = document.cookie.match(/usernum=(\d+)/)[1]
+        console.log('user information in cookie: ' + usernum)
+      }
+
+      function isInCart (id) {
+        return cart.some(item => id == item.id) // booknum is number, attributes is string
+      }
+
+      function regiserEvents () {
+        // sign in icon
+        $('.fa-sign-in').click(() => {
           if (userStatus === 0) {
-            layer.msg('you have not logined in yet')
-            return
+            window.location.href = '/pages/login.html'
           } else {
-            const btn = event.target
+            layer.msg('you have alreay logined')
+          }
+        })
+        // user home page
+        $('.fa-user-o').click(() => {
+          if (userStatus === 1) {
+            window.location.href = '/clientHome'
+          } else {
+            layer.msg('you have not logined yet')
+          }
+        })
+        // reigster icon
+        $('.fa-registered').click(() => {
+          window.location.href = '/pages/register.html'
+        })
+        // add book button
+        bagButtons.forEach((btn) => {
+          const id = btn.getAttribute('booknum')
+          if (isInCart(id)) {
             btn.innerHTML = 'in cart'
             btn.disable = true
-            const booknum = btn.getAttribute('booknum')
-            console.log(booknum)
-            Database.addProduct(booknum)
+          }
+          btn.addEventListener('click', () => {
+            if (userStatus === 0) {
+              layer.msg('you have not logined in yet')
+              return
+            } else {
+              const btn = event.target
+              btn.innerHTML = 'in cart'
+              btn.disable = true
+              const booknum = btn.getAttribute('booknum')
+              console.log(booknum)
+              Database.addProduct(booknum)
+            }
+          })
+        })
+        // cart buttons
+        openCart.addEventListener('click', () => {
+          if (userStatus === 1) {
+            UI.showCart()
+          } else {
+            layer.msg('you have not logined yet')
           }
         })
-      })
-      // cart buttons
-      openCart.addEventListener('click', UI.showCart)
-      closeCart.addEventListener('click', UI.hideCart)
-      cartContent.addEventListener('click', (event) => {
-        console.log(event.target)
-        const classList = event.target.classList
-        const id = event.target.getAttribute('booknum')
-        if (classList.contains('remove-item')) {
-          Database.removeProduct(id, event.target)
-        } else if (classList.contains('fa-chevron-up')) {
-          Database.increaseProduct(id, event.target)
-        } else if (classList.contains('fa-chevron-down')) {
-          const val = parseInt(event.target.previousElementSibling.innerText)
-          if (val > 1) {
-            Database.decreaseProduct(id, event.target)
+        closeCart.addEventListener('click', UI.hideCart)
+        clearCart.addEventListener('click', UI.clearCart)
+        cartContent.addEventListener('click', (event) => {
+          console.log(event.target)
+          const classList = event.target.classList
+          const id = event.target.getAttribute('booknum')
+          const type = event.target.getAttribute('type')
+          if (classList.contains('remove-item')) {
+            Database.removeProduct(id, event.target)
+          } else if (classList.contains('fa-chevron-up')) {
+            Database.increaseProduct(id, event.target)
+          } else if (classList.contains('fa-chevron-down')) {
+            const val = parseInt(event.target.previousElementSibling.innerText)
+            if (val > 1) {
+              Database.decreaseProduct(id, event.target)
+            }
+          } else if (type === 'checkbox') {
+            UI.setCartValue()
           }
-        }
-      })
-      // image click event
-      productImages.forEach(image => {
-        image.addEventListener('click', (event) => {
-          const booknum = event.target.getAttribute('booknum')
-          window.location.href = `/bookHome/${booknum}`
         })
-      })
-    }
-    /* === CLASSES === */
-    class UI {
-      static addCartItem (item) {
-        const div = document.createElement('div')
-        div.classList.add('cart-item')
-        div.innerHTML = `
+        // image click event
+        productImages.forEach(image => {
+          image.addEventListener('click', (event) => {
+            const booknum = event.target.getAttribute('booknum')
+            window.location.href = `/bookHome/${booknum}`
+          })
+        })
+        // stores references
+        storeReferencee.forEach(store => {
+          store.addEventListener('click', () => {
+            const storenum = store.getAttribute('storenum')
+            window.location.href = `/storeHome/${storenum}`
+          })
+        })
+      }
+      /* === CLASSES === */
+      class UI {
+        static addCartItem (item) {
+          const div = document.createElement('div')
+          div.classList.add('cart-item')
+          div.setAttribute('booknum', item.id)
+          div.innerHTML = `
+          <input type="checkbox" booknum=${item.id}>
           <img src=${item.image} alt="product">
           <div>
             <h4>${item.title}</h4>
@@ -205,138 +236,165 @@
             <i class="fas fa-chevron-down" booknum=${item.id}></i>
           </div>
         `
-        cartContent.appendChild(div)
-      }
+          cartContent.appendChild(div)
+        }
 
-      static setCartValue () {
-        let itemCount = 0
-        let priceTotal = 0
-        cart.forEach(item => {
-          itemCount += item.amount
-          priceTotal += item.amount * item.price
-        })
-        console.log(itemCount)
-        console.log(priceTotal)
-        cartItemsCount.innerHTML = itemCount
-        cartPriceTotal.innerHTML = priceTotal.toFixed(2)
-      }
+        static removeCartItem (id) {
+          const child = document.querySelector(`div.cart-item[booknum="${id}"]`)
+          cartContent.removeChild(child)
+          cart = cart.filter(item => item.id !== parseInt(id))
+        }
 
-      static showCart () {
-        cartOverlay.classList.add('transparentBcg')
-        cartDOM.classList.add('showCart')
-      }
-
-      static hideCart () {
-        cartOverlay.classList.remove('transparentBcg')
-        cartDOM.classList.remove('showCart')
-      }
-    }
-
-    class Database {
-      static addProduct (id) {
-        $.ajax({
-          url: '/addProduct',
-          data: {
-            booknum: id,
-            usernum: usernum
-          },
-          type: 'post',
-          dataType: 'text',
-          success: (data) => {
-            const book = JSON.parse(data)
-            cart.push(book)
-            UI.addCartItem(book)
-            UI.setCartValue(book)
-          }
-        })
-      }
-
-      static increaseProduct (id, source) {
-        $.ajax({
-          url: '/increaseProduct',
-          data: {
-            booknum: id,
-            usernum: usernum
-          },
-          type: 'post',
-          dataType: 'text',
-          success: (data) => {
-            if (data === 'ok') {
-              const newVal = parseInt(source.nextElementSibling.innerText) + 1
-              source.nextElementSibling.innerText = newVal
-              const index = cart.findIndex(item => item.id === parseInt(id))
-              cart[index].amount += 1
-              UI.setCartValue()
+        static setCartValue () {
+          let itemCount = 0
+          let priceTotal = 0
+          cart.forEach(item => {
+            const booknum = item.id
+            itemCount += item.amount
+            if (document.querySelector(`input[booknum="${booknum}"]`).checked) {
+              priceTotal += item.amount * item.price
             }
-          }
-        })
-      }
+          })
+          cartItemsCount.innerHTML = itemCount
+          cartPriceTotal.innerHTML = priceTotal.toFixed(2)
+        }
 
-      static decreaseProduct (id, source) {
-        $.ajax({
-          url: '/decreaseProduct',
-          data: {
-            booknum: id,
-            usernum: usernum
-          },
-          type: 'post',
-          dataType: 'text',
-          success: (data) => {
-            if (data === 'ok') {
-              const newVal = parseInt(source.previousElementSibling.innerText) - 1
-              source.previousElementSibling.innerText = newVal
-              const index = cart.findIndex(item => item.id === parseInt(id))
-              cart[index].amount -= 1
-              UI.setCartValue()
-            }
-          }
-        })
-      }
+        static showCart () {
+          cartOverlay.classList.add('transparentBcg')
+          cartDOM.classList.add('showCart')
+        }
 
-      static removeProduct (id, source) {
-        $.ajax({
-          url: '/removeProduct',
-          data: {
-            booknum: id,
-            usernum: usernum
-          },
-          type: 'post',
-          dataType: 'text',
-          success: (data) => {
-            if (data === 'ok') {
-              cartContent.removeChild(source.parentElement.parentElement)
-              cart = cart.filter(item => item.id !== parseInt(id))
-              UI.setCartValue()
-            }
-          }
-        })
-      }
+        static hideCart () {
+          cartOverlay.classList.remove('transparentBcg')
+          cartDOM.classList.remove('showCart')
+        }
 
-      static async setCart (callback) {
-        if (userStatus === 1) {
-          $.ajax({
-            url: '/setCart',
-            data: {usernum: usernum},
-            type: 'post',
-            dataType: 'text',
-            success: (data) => {
-              cart = JSON.parse(data)
-              callback()
+        static clearCart () {
+          cart.forEach((item, index, obj) => {
+            const booknum = item.id
+            if (document.querySelector(`input[booknum="${booknum}"]`).checked) {
+              // change order status
+              $.ajax({
+                url: '/changeOrderStatus',
+                data: { booknum: booknum },
+                type: 'post',
+                dataType: 'json',
+                success: (data) => {
+                  if (data === 'ok') {
+                    UI.removeCartItem(booknum)
+                    obj.splice(index, 1)
+                  }
+                }
+              })
             }
           })
         }
       }
-    }
 
-    /* === ON APP START === */
-    document.addEventListener('DOMContentLoaded', () => {
-      Database.setCart(() => {
-        // console.log(cart)
-        cart.forEach(item => UI.addCartItem(item))
-        UI.setCartValue()
-        regiserEvents()
-      })
-    })
-  </script>
-</body>
+      class Database {
+        static addProduct (id) {
+          $.ajax({
+            url: '/addProduct',
+            data: {
+              booknum: id,
+              usernum: usernum
+            },
+            type: 'post',
+            dataType: 'text',
+            success: (data) => {
+              const book = JSON.parse(data)
+              cart.push(book)
+              UI.addCartItem(book)
+              UI.setCartValue()
+            }
+          })
+        }
+
+        static increaseProduct (id, source) {
+          $.ajax({
+            url: '/increaseProduct',
+            data: {
+              booknum: id,
+              usernum: usernum
+            },
+            type: 'post',
+            dataType: 'text',
+            success: (data) => {
+              if (data === 'ok') {
+                const newVal = parseInt(source.nextElementSibling.innerText) + 1
+                source.nextElementSibling.innerText = newVal
+                const index = cart.findIndex(item => item.id === parseInt(id))
+                cart[index].amount += 1
+                UI.setCartValue()
+              }
+            }
+          })
+        }
+
+        static decreaseProduct (id, source) {
+          $.ajax({
+            url: '/decreaseProduct',
+            data: {
+              booknum: id,
+              usernum: usernum
+            },
+            type: 'post',
+            dataType: 'text',
+            success: (data) => {
+              if (data === 'ok') {
+                const newVal = parseInt(source.previousElementSibling.innerText) - 1
+                source.previousElementSibling.innerText = newVal
+                const index = cart.findIndex(item => item.id === parseInt(id))
+                cart[index].amount -= 1
+                UI.setCartValue()
+              }
+            }
+          })
+        }
+
+        static removeProduct (id, source) {
+          $.ajax({
+            url: '/removeProduct',
+            data: {
+              booknum: id,
+              usernum: usernum
+            },
+            type: 'post',
+            dataType: 'text',
+            success: (data) => {
+              if (data === 'ok') {
+                UI.removeCartItem(id)
+                UI.setCartValue()
+              }
+            }
+          })
+        }
+
+        static async setCart (callback) {
+          if (userStatus === 1) {
+            $.ajax({
+              url: '/setCart',
+              data: {usernum: usernum},
+              type: 'post',
+              dataType: 'text',
+              success: (data) => {
+                cart = JSON.parse(data)
+                callback()
+              }
+            })
+          }
+        }
+      }
+
+      /* === ON APP START === */
+        document.addEventListener('DOMContentLoaded', () => {
+          Database.setCart(() => {
+            // console.log(cart)
+            cart.forEach(item => UI.addCartItem(item))
+            UI.setCartValue()
+            regiserEvents()
+          })
+        })
+    </script>
+  </body>
 </html>

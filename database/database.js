@@ -86,9 +86,8 @@ function addComment (data) {
 
 function addStore (data) {
   const sql = `insert into t_Store(User_num, Store_name, Store_owner, Store_mark)
-               values(?,?,?,?,?)`
+               values(?,?,?,?)`
   const todo = [
-    data.Store_num,
     data.User_num,
     data.Store_name,
     data.Store_owner,

@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router()
 var database = require('../database/database')
 var captcha = require('../api/captcha')
+const { log } = require('debug')
 
 var products = []
 
@@ -19,7 +20,30 @@ router.get('/', async function (req, res, next) {
     }
   })
   // console.log(products)
-  res.render('index', { products: products })
+  res.render('index', {
+    products: products,
+    startPage: 1
+  })
+})
+
+router.get('/pages/:page', async (req, res) => {
+  const curPage = req.params.page
+  const rawProducts = await database.get('select * from t_Book')
+  products = rawProducts.map((item) => {
+    return {
+      id: item.Book_num,
+      price: item.Book_price,
+      title: item.Book_name,
+      image: item.Book_picture,
+      store: item.Book_Store,
+      storenum: item.Store_num
+    }
+  })
+  // console.log(products)
+  res.render('index', {
+    products: products,
+    startPage: curPage
+  })
 })
 
 router.get('/captcha', (req, res, next) => {
@@ -33,8 +57,20 @@ router.get('/clientHome', async (req, res, next) => {
   res.render('client_home', { user: userInfo[0], orders: orders })
 })
 
-router.get('/storeHome', (req, res) => {
-  res.render('storeHome')
+router.get('/storeHome/:storenum', async (req, res) => {
+  const storenum = req.params.storenum
+  const storeInfo = await database.get('select * from t_Store where Store_num = ?', [storenum])
+  const booksInfo = await database.get('select * from t_Book where Store_num = ?', [storenum])
+  const books = []
+  booksInfo.forEach(book => {
+    books.push({
+      booknum: book.Book_num,
+      bookname: book.Book_name
+    })
+  })
+  console.log(books)
+  storeInfo[0].books = books
+  res.render('store_home', { store: storeInfo[0] })
 })
 
 router.get('/hello/:name', (req, res) => {
@@ -48,6 +84,10 @@ router.get('/bookHome/:booknum', async (req, res) => {
   const bookInfo = await database.get('select * from t_Book where Book_num = ?', [booknum])
   console.log(bookInfo[0])
   res.render('book_home', { book: bookInfo[0] })
+})
+
+router.get('/addBookPage', (req, res) => {
+  res.render('add_book')
 })
 
 router.post('/loginReq', async (req, res) => {
@@ -66,6 +106,30 @@ router.post('/loginReq', async (req, res) => {
   }
 })
 
+router.post('/registerReq', async (req, res) => {
+  const maxUserNum = await database.get('select max(User_num) from t_Users')
+  const maxStoreNum = await database.get('select max(Store_num) from t_Store')
+  const storeExist = await database.get('select * from t_Store where Store_name = ?', [req.body.storename])
+  if (req.cookies.captcha !== req.body.captcha) {
+    res.json({ code: 1 })
+  } else if (storeExist.length !== 0) {
+    res.json({ code: 2 })
+  } else {
+    database.addUser(req.body)
+    if (req.body.status === 'merchant') {
+      const store = {
+        User_num: maxUserNum[0]['max(User_num)'] + 1,
+        Store_name: req.body.storename,
+        Store_owner: req.body.name,
+        Store_mark: 5 + Math.floor(Math.random() * 5)
+      }
+      database.addStore(store)
+      database.put('update t_Users set Store_num = ? where User_num = ?', [maxStoreNum[0]['max(Store_num)'] + 1, store.User_num])
+    }
+    res.json({ code: 0 })
+  }
+})
+
 router.post('/addBook', async (req, res) => {
   console.log(req.body)
   const usernum = req.cookies.usernum
@@ -74,6 +138,16 @@ router.post('/addBook', async (req, res) => {
   book.Store_num = storeInfo[0].Store_num
   book.Book_Store = storeInfo[0].Store_name
   console.log(book)
+})
+
+router.post('/isMerchant', async (req, res) => {
+  const usernum = req.cookies.usernum
+  const userInfo = await database.get('select * from t_Users where User_num = ?', [usernum])
+  if (userInfo[0].User_status === 'merchant') {
+    res.json({ code: 0 })
+  } else {
+    res.json({ code: 1 })
+  }
 })
 
 router.post('/addProduct', async (req, res) => {
@@ -91,7 +165,7 @@ router.post('/addProduct', async (req, res) => {
 
 router.post('/setCart', async (req, res) => {
   const usernum = req.body.usernum
-  const cart = await database.get('select * from t_Order where User_num = ?', [usernum])
+  const cart = await database.get('select * from t_Order where User_num = ? and Order_status = "waiting"', [usernum])
   const cartItems = []
   for (let i = 0; i < cart.length; i++) {
     const book = await database.get('select * from t_Book where Book_num = ?', [cart[i].Book_num])
@@ -125,6 +199,13 @@ router.post('/removeProduct', (req, res) => {
   const booknum = req.body.booknum
   database.put('delete from t_Order where User_num = ? and Book_num = ?', [usernum, booknum])
   res.send('ok')
+})
+
+router.post('/changeOrderStatus', (req, res) => {
+  const booknum = req.body.booknum
+  const usernum = req.cookies.usernum
+  database.put('update t_Order set Order_status = "paid" where User_num = ? and Book_num = ?', [usernum, booknum])
+  res.json('ok')
 })
 
 module.exports = router

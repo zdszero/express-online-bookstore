@@ -35,6 +35,7 @@ body {
 .logo {
   position: relative;
   right: 60px;
+  height: 50px;
   margin: 0 auto;
 }
 
@@ -110,10 +111,10 @@ tr:hover {
   <nav class="navbar">
     <div class="nav-icon">
       <img src="images/comment.svg" alt="quest" class="comment">
-      <img src="images/home.svg" alt="quest">
-      <img src="images/Management.svg" alt="manage">
+      <img src="images/Management.svg" alt="manage" class="manage">
+      <img src="images/addbook.svg" alt="add book" class="addbook">
     </div>
-    <img src="images/logo2.jpg" alt="store logo" class="logo" />
+    <img src="images/logo.png" alt="store logo" class="logo" />
   </nav>
   <!-- end of navigation bar -->
   <!-- information table -->
@@ -186,9 +187,19 @@ tr:hover {
   $('.close').click(() => {
     $('.quest').css('left', '-50%')
   })
-  json = {
-
-  }
+  $('.addbook').click(() => {
+    $.ajax({
+      url: '/isMerchant',
+      type: 'post',
+      success: (res) => {
+        if (res.code === 0) {
+          window.location.href = '/addBookPage'
+        } else {
+          layer.msg('you are not a merchant')
+        }
+      }
+    })
+  })
   $('.submit').click(() => {
     const detail = $('textarea').val()
     const kind = $('select').val()

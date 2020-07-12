@@ -244,8 +244,6 @@
           repassword: $('input[name="repassword"]').val(),
           captcha: $('input[name="captcha"]').val()
         }
-        console.log('user send:')
-        console.log(json)
         if (json.account.length < 3) {
           layer.msg('account is too short')
           $('input[name="account"]').css('border', '#ff4852 solid 2px')
@@ -260,7 +258,7 @@
         }
         $('input[name="name"]').css('border', '#3f4c51 solid 2px')
 
-        const phoneRegex = /^\d{10}$/
+        const phoneRegex = /^\d{11}$/
         if (phoneRegex.test(json.phone) === false) {
           layer.msg('phone number is not valid')
           $('input[name="phone"]').css('border', '#ff4852 solid 2px')
@@ -284,16 +282,25 @@
         $('input[name="addr"]').css('border', '#3f4c51 solid 2px')
 
         if (json.password.length < 4) {
-          alert('password is too short!');
+          layer.msg('password is too short!');
           $('input[name="password"]').css('border', '#ff4852 solid 2px');
           return false;
         }
         if (json.repassword != json.password) {
-          alert('two passwords are not the same!');
+          layer.msg('two passwords are not the same!');
           $('input[name="repassword"]').css('border', '#ff4852 solid 2px');
           return false;
         }
         $('input[name="password"]').css('border', '#3f4c51 solid 2px');
+        $('input[name="repassword"]').css('border', '#3f4c51 solid 2px');
+        if (json.status === 'merchant') {
+          var storeName = prompt('please input your store name')
+          if (storeName === null) {
+            return false
+          } else {
+            json.storename = storeName
+          }
+        }
 
         $.ajax({
           url: '/registerReq',
@@ -303,11 +310,13 @@
           success: (data) => {
             let res = JSON.parse(data)
             if (res.code === 0) {
-              alert('register succeeded')
+              layer.msg('register succeeded')
             } else if (res.code === 1) {
-              alert('wrong captcha')
+              layer.msg('wrong captcha')
+            } else if (res.code === 2) {
+              layer.msg('duplicate store name')
             } else {
-              alert('register failed')
+              layer.msg('register failed')
             }
           }
         })

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>store home</title>
+<style>
+body {
+  font-size: 20px;
+}
+
+h1, li, span {
+  position: relative;
+  left: 50px;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: rgb(231, 226, 221);
+  z-index: 1;
+}
+
+.logo {
+  height: 50px;
+  margin: 0 auto;
+}
+
+.book:hover {
+  color: #0af;
+}
+</style>
+</head>
+<body>
+  <!-- navigation bar -->
+  <nav class="navbar">
+    <img src="../images/logo.png" alt="logo" class="logo" />
+  </nav>
+  <!-- end of navigation bar -->
+  <h1>store info</h1>
+  <ol>
+    <li><b>store name:</b> <%= store.Store_name %></li>
+    <li><b>store owner:</b> <%= store.Store_owner %></li>
+    <li><b>store mark:</b> <%= store.Store_mark %></li>
+  </ol>
+  <h1>store books</h1>
+  <span><%= store.Store_name %> has <b><%= store.books.length %></b> books in total</span>
+  <ol>
+    <% for (let i = 0; i < store.books.length; i++) { %>
+    <li class="book" id=<%= store.books[i].booknum %>><%= store.books[i].bookname %></li>
+    <% } %>
+  </ol>
+<script>
+  const bookReferences = document.querySelectorAll('.book')
+  bookReferences.forEach(book => {
+    book.addEventListener('click', () => {
+      const booknum = book.getAttribute('id')
+      window.location.href = `/bookHome/${booknum}`
+    })
+  })
+</script>
+</body>
+</html>

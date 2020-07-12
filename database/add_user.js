@@ -1,12 +1,12 @@
 var db = require('./database')
 
 var user = {
-  account: 'cp',
-  password: '654321',
-  name: 'Pu Cao',
-  phone: '18012345678',
-  email: '534324432@qq.com',
-  addr: 'Hunan Zhangjiajie',
+  account: 'scj',
+  password: '987654',
+  name: 'Chengjie Shi',
+  phone: '14282932932',
+  email: '353324432@qq.com',
+  addr: 'Hebei Xingtai',
   status: 'merchant'
 }
 

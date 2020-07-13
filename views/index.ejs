@@ -44,7 +44,7 @@
         <h2>our books</h2>
       </div>
       <div class="products-center">
-        <% for (let i = startPage - 1; i < products.length && i < startPage * 18; i++) { %>
+        <% for (let i = (startPage - 1) * 18; i < products.length && i < startPage * 18; i++) { %>
         <!-- single product -->
         <article class="product">
           <div class="img-container">
@@ -87,22 +87,23 @@
     <script src="layui/layui.all.js"></script>
     <script>
       /* === VARIABLES === */
-
       // layui variables
       var layer = layui.layer
       var laypage = layui.laypage
+      <% if (isFirst) { %>
       layer.msg('welcome')
+      <% } %>
       laypage.render({
         elem: 'pager'
+        ,curr: <%= startPage %>
         ,count: <%= products.length %>
         ,limit: 18
         ,jump: (obj, first) => {
           if (!first) {
-            window.location.href = `/pages/${obj.curr}`
+            window.location.href = `/${obj.curr}`
           }
         }
       })
-
       // page elements
       var bagButtons = document.querySelectorAll('.bag-btn')
       var cart = []
@@ -127,96 +128,12 @@
         console.log('user information in cookie: ' + usernum)
       }
 
+      /* === FUNCTIONS === */
       function isInCart (id) {
         return cart.some(item => id == item.id) // booknum is number, attributes is string
       }
 
-      function regiserEvents () {
-        // sign in icon
-        $('.fa-sign-in').click(() => {
-          if (userStatus === 0) {
-            window.location.href = '/pages/login.html'
-          } else {
-            layer.msg('you have alreay logined')
-          }
-        })
-        // user home page
-        $('.fa-user-o').click(() => {
-          if (userStatus === 1) {
-            window.location.href = '/clientHome'
-          } else {
-            layer.msg('you have not logined yet')
-          }
-        })
-        // reigster icon
-        $('.fa-registered').click(() => {
-          window.location.href = '/pages/register.html'
-        })
-        // add book button
-        bagButtons.forEach((btn) => {
-          const id = btn.getAttribute('booknum')
-          if (isInCart(id)) {
-            btn.innerHTML = 'in cart'
-            btn.disable = true
-          }
-          btn.addEventListener('click', () => {
-            if (userStatus === 0) {
-              layer.msg('you have not logined in yet')
-              return
-            } else {
-              const btn = event.target
-              btn.innerHTML = 'in cart'
-              btn.disable = true
-              const booknum = btn.getAttribute('booknum')
-              console.log(booknum)
-              Database.addProduct(booknum)
-            }
-          })
-        })
-        // cart buttons
-        openCart.addEventListener('click', () => {
-          if (userStatus === 1) {
-            UI.showCart()
-          } else {
-            layer.msg('you have not logined yet')
-          }
-        })
-        closeCart.addEventListener('click', UI.hideCart)
-        clearCart.addEventListener('click', UI.clearCart)
-        cartContent.addEventListener('click', (event) => {
-          console.log(event.target)
-          const classList = event.target.classList
-          const id = event.target.getAttribute('booknum')
-          const type = event.target.getAttribute('type')
-          if (classList.contains('remove-item')) {
-            Database.removeProduct(id, event.target)
-          } else if (classList.contains('fa-chevron-up')) {
-            Database.increaseProduct(id, event.target)
-          } else if (classList.contains('fa-chevron-down')) {
-            const val = parseInt(event.target.previousElementSibling.innerText)
-            if (val > 1) {
-              Database.decreaseProduct(id, event.target)
-            }
-          } else if (type === 'checkbox') {
-            UI.setCartValue()
-          }
-        })
-        // image click event
-        productImages.forEach(image => {
-          image.addEventListener('click', (event) => {
-            const booknum = event.target.getAttribute('booknum')
-            window.location.href = `/bookHome/${booknum}`
-          })
-        })
-        // stores references
-        storeReferencee.forEach(store => {
-          store.addEventListener('click', () => {
-            const storenum = store.getAttribute('storenum')
-            window.location.href = `/storeHome/${storenum}`
-          })
-        })
-      }
-      /* === CLASSES === */
+      /* === UI CLASS === */
       class UI {
         static addCartItem (item) {
           const div = document.createElement('div')
@@ -290,7 +207,9 @@
           })
         }
       }
+      /* === END OF UI CLASS === */
 
+      /* === DATABASE CLASS === */
       class Database {
         static addProduct (id) {
           $.ajax({
@@ -385,6 +304,95 @@
           }
         }
       }
+      /* === END OF DATABASE CLASS === */
+
+
+      /* === REGISTER EVENTS === */
+      // sign in icon
+      $('.fa-sign-in').click(() => {
+        console.log(userStatus)
+        if (userStatus === 0) {
+          window.location.href = '/pages/login.html'
+        } else {
+          layer.msg('you have alreay logined')
+        }
+      })
+      // user home page
+      $('.fa-user-o').click(() => {
+        if (userStatus === 1) {
+          window.location.href = '/clientHome'
+        } else {
+          layer.msg('you have not logined yet')
+        }
+      })
+      // reigster icon
+      $('.fa-registered').click(() => {
+        window.location.href = '/pages/register.html'
+      })
+      // add book button
+      bagButtons.forEach((btn) => {
+        const id = btn.getAttribute('booknum')
+        if (isInCart(id)) {
+          btn.innerHTML = 'in cart'
+          btn.disable = true
+        }
+        btn.addEventListener('click', () => {
+          if (userStatus === 0) {
+            layer.msg('you have not logined in yet')
+            return
+          } else {
+            const btn = event.target
+            btn.innerHTML = 'in cart'
+            btn.disable = true
+            const booknum = btn.getAttribute('booknum')
+            console.log(booknum)
+            Database.addProduct(booknum)
+          }
+        })
+      })
+      // cart buttons
+      openCart.addEventListener('click', () => {
+        if (userStatus === 1) {
+          UI.showCart()
+        } else {
+          layer.msg('you have not logined yet')
+        }
+      })
+      closeCart.addEventListener('click', UI.hideCart)
+      clearCart.addEventListener('click', UI.clearCart)
+      cartContent.addEventListener('click', (event) => {
+        console.log(event.target)
+        const classList = event.target.classList
+        const id = event.target.getAttribute('booknum')
+        const type = event.target.getAttribute('type')
+        if (classList.contains('remove-item')) {
+          Database.removeProduct(id, event.target)
+        } else if (classList.contains('fa-chevron-up')) {
+          Database.increaseProduct(id, event.target)
+        } else if (classList.contains('fa-chevron-down')) {
+          const val = parseInt(event.target.previousElementSibling.innerText)
+          if (val > 1) {
+            Database.decreaseProduct(id, event.target)
+          }
+        } else if (type === 'checkbox') {
+          UI.setCartValue()
+        }
+      })
+      // image click event
+      productImages.forEach(image => {
+        image.addEventListener('click', (event) => {
+          const booknum = event.target.getAttribute('booknum')
+          window.location.href = `/bookHome/${booknum}`
+        })
+      })
+      // stores references
+      storeReferencee.forEach(store => {
+        store.addEventListener('click', () => {
+          const storenum = store.getAttribute('storenum')
+          window.location.href = `/storeHome/${storenum}`
+        })
+      })
+      /* === END OF REGISTER EVENTS === */
 
       /* === ON APP START === */
         document.addEventListener('DOMContentLoaded', () => {
@@ -392,7 +400,6 @@
             // console.log(cart)
             cart.forEach(item => UI.addCartItem(item))
             UI.setCartValue()
-            regiserEvents()
           })
         })
     </script>

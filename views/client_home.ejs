@@ -26,15 +26,14 @@ body {
 
 .nav-icon {
   position: relative;
-  left: 20px;
+  left: 30px;
   top: 5px;
-  width: 160px;
   font-size: 1.5rem;
 }
 
 .logo {
   position: relative;
-  right: 60px;
+  right: 80px;
   height: 50px;
   margin: 0 auto;
 }
@@ -110,6 +109,7 @@ tr:hover {
   <!-- navigation bar -->
   <nav class="navbar">
     <div class="nav-icon">
+      <img src="images/log-out.svg" alt="logout" class="logout">
       <img src="images/comment.svg" alt="quest" class="comment">
       <img src="images/Management.svg" alt="manage" class="manage">
       <img src="images/addbook.svg" alt="add book" class="addbook">
@@ -118,7 +118,7 @@ tr:hover {
   </nav>
   <!-- end of navigation bar -->
   <!-- information table -->
-  <h1>user data</h1>
+  <h1>your infomation</h1>
   <table>
     <tr>
       <th>Type</th>
@@ -210,8 +210,40 @@ tr:hover {
       layer.msg('detail cannot be more than 200 characters')
       return
     } else {
-
+      $.ajax({
+        url: '/addQuest',
+        data: {
+          kind: kind,
+          detail: detail
+        },
+        type: 'post',
+        dataType: 'json',
+        success: (data) => {
+          if (data === 'ok') {
+            layer.msg('succeed')
+            $('textarea').val('')
+          }
+        }
+      })
     }
+  })
+  $('.logout').click(() => {
+    const ok = confirm('are you sure you want to logout?')
+    if (ok === true) {
+      document.cookie = 'usernum='
+      window.location.href = '/'
+    }
+  })
+  $('.manage').click(() => {
+    $.ajax({
+      url: '/isMerchant',
+      type: 'post',
+      success: (data) => {
+        if (data.code === 0) {
+          window.location.href = '/manageStore'
+        }
+      }
+    })
   })
 </script>
 </html>

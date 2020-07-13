@@ -1,14 +1,14 @@
 var XSLX = require('xlsx')
 var database = require('./database')
 
-const workbook = XSLX.readFile('../setup-files-js-comfy-house/Data.xlsx')
+const workbook = XSLX.readFile('./Data2.xslx')
 // worksheet list
 const worksheets = workbook.Sheets
 // get the first workshhet
 const worksheet = worksheets.Sheet1
 
 // omit booknum and bookmark
-for (let row = 2; row <= 11; row++) {
+for (let row = 2; row <= 52; row++) {
   const json = {
     Store_num: worksheet['B' + row].v,
     Book_Store: worksheet['C' + row].v,

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>store management</title>
+  <link rel="stylesheet" href="layui/css/modules/layer/default/layer.css">
+  <script src="layui/layui.all.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+table {
+  width: 80%;
+  margin: 30px auto;
+}
+
+th, td {
+  border: 1px solid grey;
+  text-align: center;
+  height: 40px;
+}
+
+</style>
+</head>
+<body>
+  <h1>orders</h1>
+  <table>
+    <tr>
+      <th>book</th>
+      <th>number</th>
+      <th>price</th>
+      <th>receiver</th>
+      <th>address</th>
+      <th>phone</th>
+      <th>status</th>
+      <th>choice</th>
+    </tr>
+    <% for (let i = 0; i < orders.length; i++) { %>
+    <tr>
+      <td><%= orders[i].Order_Book %></td>
+      <td><%= orders[i].Order_Booknum %></td>
+      <td><%= orders[i].Order_Price %></td>
+      <td><%= orders[i].Order_Receiver %></td>
+      <td><%= orders[i].Order_addr %></td>
+      <td><%= orders[i].Order_Phone %></td>
+      <td><%= orders[i].Order_status %></td>
+      <td><button id="<%= orders[i].Order_num %>">send</button></td>
+    </tr>
+    <% } %>
+  </table>
+<script>
+  var layer = layui.layer
+
+  var btns = document.querySelectorAll('button')
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.parentElement.previousElementSibling.innerText !== 'paid') {
+        layer.msg('you cannot send this book')
+      } else {
+        const id = btn.getAttribute('id')
+        $.ajax({
+          url: '/changeOrderStatus2',
+          data: {
+            orderid: id
+          },
+          type: 'post',
+          dataType: 'json',
+          success: (data) => {
+            if (data === 'ok') {
+              layer.msg('sending succeeds')
+              btn.parentElement.previousElementSibling.innerText = 'sending'
+            }
+          }
+        })
+      }
+    })
+  })
+</script>
+</body>
+</html>

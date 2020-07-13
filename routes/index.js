@@ -22,27 +22,17 @@ router.get('/', async function (req, res, next) {
   // console.log(products)
   res.render('index', {
     products: products,
-    startPage: 1
+    startPage: 1,
+    isFirst: true
   })
 })
 
-router.get('/pages/:page', async (req, res) => {
+router.get('/:page(\\d+)/', (req, res) => {
   const curPage = req.params.page
-  const rawProducts = await database.get('select * from t_Book')
-  products = rawProducts.map((item) => {
-    return {
-      id: item.Book_num,
-      price: item.Book_price,
-      title: item.Book_name,
-      image: item.Book_picture,
-      store: item.Book_Store,
-      storenum: item.Store_num
-    }
-  })
-  // console.log(products)
   res.render('index', {
     products: products,
-    startPage: curPage
+    startPage: curPage,
+    isFirst: false
   })
 })
 
@@ -68,9 +58,16 @@ router.get('/storeHome/:storenum', async (req, res) => {
       bookname: book.Book_name
     })
   })
-  console.log(books)
   storeInfo[0].books = books
   res.render('store_home', { store: storeInfo[0] })
+})
+
+router.get('/manageStore', async (req, res) => {
+  const usernum = req.cookies.usernum
+  const orders = await database.get('select * from t_Order where User_num = ?', [usernum])
+  res.render('store_manage', {
+    orders: orders
+  })
 })
 
 router.get('/hello/:name', (req, res) => {
@@ -151,7 +148,6 @@ router.post('/isMerchant', async (req, res) => {
 })
 
 router.post('/addProduct', async (req, res) => {
-  console.log(req.body)
   database.addOrder(req.body)
   const book = await database.get('select * from t_Book where Book_num = ?', [req.body.booknum])
   res.json({
@@ -161,6 +157,21 @@ router.post('/addProduct', async (req, res) => {
     id: book[0].Book_num,
     price: book[0].Book_price
   })
+})
+
+router.post('/addQuest', async (req, res) => {
+  const user = await database.get('select * from t_Users where User_num = ?', [req.cookies.usernum])
+  const data = {
+    Store_num: null,
+    User_num: user[0].User_num,
+    Quest_Users: user[0].User_name,
+    Quest_kind: req.body.kind,
+    Quest_detail: req.body.detail,
+    Quest_status: 'unhandled',
+    Quest_days: 1
+  }
+  database.addQuest(data)
+  res.json('ok')
 })
 
 router.post('/setCart', async (req, res) => {
@@ -205,6 +216,12 @@ router.post('/changeOrderStatus', (req, res) => {
   const booknum = req.body.booknum
   const usernum = req.cookies.usernum
   database.put('update t_Order set Order_status = "paid" where User_num = ? and Book_num = ?', [usernum, booknum])
+  res.json('ok')
+})
+
+router.post('/changeOrderStatus2', (req, res) => {
+  const orderid = req.body.orderid
+  database.put('update t_Order set Order_status = "sending" where Order_num = ?', [orderid])
   res.json('ok')
 })
 

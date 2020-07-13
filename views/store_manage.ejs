@@ -51,15 +51,34 @@ th, td {
       <td><%= orders[i].Order_addr %></td>
       <td><%= orders[i].Order_Phone %></td>
       <td><%= orders[i].Order_status %></td>
-      <td><button id="<%= orders[i].Order_num %>">send</button></td>
+      <td><button class="send" id="<%= orders[i].Order_num %>">send</button></td>
+    </tr>
+    <% } %>
+  </table>
+  <h1>books</h1>
+  <table>
+    <tr>
+      <th>name</th>
+      <th>price</th>
+      <th>stock</th>
+      <th>options</th>
+    </tr>
+    <% for (let i = 0; i < books.length; i++) {%>
+    <tr>
+      <td><%= books[i].Book_name %></td>
+      <td><%= books[i].Book_price %></td>
+      <td><%= books[i].Book_stock %></td>
+      <td><button class="price" id="<%= books[i].Book_num %>">change price</button><button class="stock" id="<%= books[i].Book_num %>">change stock</button></td>
     </tr>
     <% } %>
   </table>
 <script>
   var layer = layui.layer
 
-  var btns = document.querySelectorAll('button')
-  btns.forEach(btn => {
+  var sendBtns = document.querySelectorAll('.send')
+  var priceBtns = document.querySelectorAll('.price')
+  var stockBtns = document.querySelectorAll('.stock')
+  sendBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       if (btn.parentElement.previousElementSibling.innerText !== 'paid') {
         layer.msg('you cannot send this book')
@@ -82,6 +101,63 @@ th, td {
       }
     })
   })
+  priceBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const strVal = prompt('you want to change the value to:')
+      if (/\+?\d+/.test(strVal) === true) {
+        const val = parseInt(strVal)
+        if (val === 0) {
+          alert('price cannot be 0')
+        } else {
+          const booknum = btn.getAttribute('id')
+          $.ajax({
+            url: '/updatePrice',
+            data: {
+              booknum: booknum,
+              price: val
+            },
+            type: 'post',
+            dataType: 'json',
+            success: (data) => {
+              if (data === 'ok') {
+                layer.msg('price updated!')
+                btn.parentElement.previousElementSibling.previousElementSibling.innerText = val
+              }
+            }
+          })
+        }
+      }
+    })
+  })
+  stockBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const strVal = prompt('you want to change the value to:')
+      if (/\+?\d+/.test(strVal) === true) {
+        const val = parseInt(strVal)
+        if (val === 0) {
+          alert('stock cannot be 0')
+        } else {
+          const booknum = btn.getAttribute('id')
+          $.ajax({
+            url: '/updateStock',
+            data: {
+              booknum: booknum,
+              stock: val
+            },
+            type: 'post',
+            dataType: 'json',
+            success: (data) => {
+              if (data === 'ok') {
+                layer.msg('stock updated!')
+                btn.parentElement.previousElementSibling.innerText = val
+              }
+            }
+          })
+        }
+      }
+    })
+  })
+</script>
 </script>
 </body>
 </html>

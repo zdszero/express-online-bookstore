@@ -64,9 +64,12 @@ router.get('/storeHome/:storenum', async (req, res) => {
 
 router.get('/manageStore', async (req, res) => {
   const usernum = req.cookies.usernum
-  const orders = await database.get('select * from t_Order where User_num = ?', [usernum])
+  const storeInfo = await database.get('select * from t_Store where User_num = ?', [usernum])
+  const orders = await database.get('select * from t_Order where Order_Store = ?', [storeInfo[0].Store_name])
+  const books = await database.get('select * from t_Book where Store_num = ?', [storeInfo[0].Store_num])
   res.render('store_manage', {
-    orders: orders
+    orders: orders,
+    books: books
   })
 })
 
@@ -222,6 +225,20 @@ router.post('/changeOrderStatus', (req, res) => {
 router.post('/changeOrderStatus2', (req, res) => {
   const orderid = req.body.orderid
   database.put('update t_Order set Order_status = "sending" where Order_num = ?', [orderid])
+  res.json('ok')
+})
+
+router.post('/updatePrice', (req, res) => {
+  const booknum = req.body.booknum
+  const price = req.body.price
+  database.put('update t_Book set Book_price = ? where Book_num = ?', [price, booknum])
+  res.json('ok')
+})
+
+router.post('/updateStock', (req, res) => {
+  const booknum = req.body.booknum
+  const stock = req.body.stock
+  database.put('update t_Book set Book_stock = ? where Book_num = ?', [stock, booknum])
   res.json('ok')
 })
 

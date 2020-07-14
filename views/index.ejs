@@ -11,15 +11,30 @@
   </head>
 
   <body>
+  <!-- floating window -->
+  <div class="floating">
+    <div class="tag-head">
+      <h2>tags</h2>
+    </div>
+    <div class="tag-area">
+      <% for (let i = 0; i < tags.length; i++) { %>
+      <input type="radio" name="tag">
+      <label><%= tags[i].kind %></label><br>
+      <% } %>
+    </div>
+  </div>
+  <!-- end of floating window -->
     <!-- navigation bar -->
     <nav class="navbar">
       <div class="navbar-center">
         <div class="nav-icon">
-          <i class="fas fa-bars"></i>
+          <img class="open-tag" src="images/tag.svg" alt="tag">
+          <input type="text" class="search-input">
+          <img class="search" src="images/search.svg" alt="search">
         </div>
         <img class="logo" src="images/logo.png" alt="store logo" />
         <div class="cart-btn">
-          <div class="nav-icon">
+          <div class="nav-icon nav-right">
             <i class="fa fa-sign-in" aria-hidden="true"></i>
             <i class="fa fa-user-o" aria-hidden="true"></i>
             <i class="fa fa-registered" aria-hidden="true"></i>
@@ -48,15 +63,15 @@
         <!-- single product -->
         <article class="product">
           <div class="img-container">
-            <img src=<%= products[i].image %> booknum=<%= products[i].id %> alt="product" class="product-img">
-            <button class="bag-btn" booknum=<%= products[i].id %>>
+            <img src=<%= products[i].Book_picture %> booknum=<%= products[i].Book_num %> alt="product" class="product-img">
+            <button class="bag-btn" booknum=<%= products[i].Book_num %>>
               <i class="fas fa-shopping-cart"></i>
               add to cart
             </button>
           </div>
-          <h3><%= products[i].title %></h3>
-          <h5 class="stores" storenum="<%= products[i].storenum %>"><%= products[i].store %></h5>
-          <h4>$ <%= products[i].price %></h4>
+          <h3><%= products[i].Book_name %></h3>
+          <h5 class="stores" storenum="<%= products[i].Store_num %>"><%= products[i].Book_Store %></h5>
+          <h4>$ <%= products[i].Book_price %></h4>
         </article>
         <!-- end of single product -->
         <% } %>
@@ -308,9 +323,32 @@
 
 
       /* === REGISTER EVENTS === */
+      // toggle tags
+      $('.open-tag').click(() => {
+        if ($('.floating').css('left') === '300px') {
+          $('.floating').css('left', '-50%')
+        } else {
+          $('.floating').css('left', '300px')
+        }
+      })
+      // search
+      $('.search').click(() => {
+        const radioChoice = document.querySelector('input[name="tag"]:checked')
+        const searchContent = document.querySelector('.search-input').value
+        console.log(radioChoice)
+        console.log(searchContent)
+        if (radioChoice === null && searchContent === '') {
+          layer.msg('content is empty')
+        } else {
+          let tagContent = ''
+          if (radioChoice !== null) {
+            tagContent = radioChoice.nextElementSibling.innerText
+          }
+          window.location.href = `/searchBooks?tagContent=${tagContent}&searchContent=${searchContent}`
+        }
+      })
       // sign in icon
       $('.fa-sign-in').click(() => {
-        console.log(userStatus)
         if (userStatus === 0) {
           window.location.href = '/pages/login.html'
         } else {
@@ -328,27 +366,6 @@
       // reigster icon
       $('.fa-registered').click(() => {
         window.location.href = '/pages/register.html'
-      })
-      // add book button
-      bagButtons.forEach((btn) => {
-        const id = btn.getAttribute('booknum')
-        if (isInCart(id)) {
-          btn.innerHTML = 'in cart'
-          btn.disable = true
-        }
-        btn.addEventListener('click', () => {
-          if (userStatus === 0) {
-            layer.msg('you have not logined in yet')
-            return
-          } else {
-            const btn = event.target
-            btn.innerHTML = 'in cart'
-            btn.disable = true
-            const booknum = btn.getAttribute('booknum')
-            console.log(booknum)
-            Database.addProduct(booknum)
-          }
-        })
       })
       // cart buttons
       openCart.addEventListener('click', () => {
@@ -392,13 +409,39 @@
           window.location.href = `/storeHome/${storenum}`
         })
       })
+      // register after setting cart
+      function registerLater () {
+        // add book button
+        bagButtons.forEach((btn) => {
+          const id = btn.getAttribute('booknum')
+          if (isInCart(id)) {
+            btn.innerHTML = 'in cart'
+            btn.disable = true
+          }
+          btn.addEventListener('click', () => {
+            if (userStatus === 0) {
+              layer.msg('you have not logined in yet')
+              return
+            } else {
+              const btn = event.target
+              btn.innerHTML = 'in cart'
+              btn.disable = true
+              const booknum = btn.getAttribute('booknum')
+              console.log(booknum)
+              Database.addProduct(booknum)
+            }
+          })
+        })
+      }
       /* === END OF REGISTER EVENTS === */
 
       /* === ON APP START === */
         document.addEventListener('DOMContentLoaded', () => {
           Database.setCart(() => {
-            // console.log(cart)
-            cart.forEach(item => UI.addCartItem(item))
+            cart.forEach(item => {
+              registerLater()
+              UI.addCartItem(item)
+            })
             UI.setCartValue()
           })
         })

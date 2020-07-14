@@ -21,6 +21,33 @@ body {
   font-family: "Lato", sans-serif;
 }
 
+/* --------------- Floating ---------------- */
+
+.floating {
+  position: fixed;
+  border: 1px solid;
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px;
+  left: -50%;
+  top: 60px;
+  transform: translate(-50%, 0);
+  background-color: #ddd;
+  z-index: 1;
+}
+
+.tag-head {
+  text-align: center;
+  margin: 10px auto;
+}
+
+.tag-area {
+  font-size: 16px;
+  margin: 10px auto;
+}
+
+/* --------------- End Of Floating ---------------- */
+
 /* --------------- Navbar ---------------- */
 
 .navbar {
@@ -46,9 +73,17 @@ body {
 
 .nav-icon {
   display: flex;
-  width: 120px;
+  width: 250px;
   justify-content: space-between;
   font-size: 1.5rem;
+}
+
+.search-input {
+  display: block;
+  border: 3px solid #aaa;
+  text-align: right;
+  font-size: 14px;
+  width: 150px;
 }
 
 .cart-btn {

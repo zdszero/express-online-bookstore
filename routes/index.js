@@ -5,24 +5,22 @@ var captcha = require('../api/captcha')
 const { log } = require('debug')
 
 var products = []
+var tags = []
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-  const rawProducts = await database.get('select * from t_Book')
-  products = rawProducts.map((item) => {
-    return {
-      id: item.Book_num,
-      price: item.Book_price,
-      title: item.Book_name,
-      image: item.Book_picture,
-      store: item.Book_Store,
-      storenum: item.Store_num
-    }
-  })
-  // console.log(products)
+  products = await database.get('select * from t_Book')
+  let kind1 = await database.get('select distinct Book_kind1 from t_Book')
+  kind1 = kind1.map(book => { return { kind: book.Book_kind1 } })
+  let kind2 = await database.get('select distinct Book_kind2 from t_Book where Book_kind2 is not null')
+  kind2 = kind2.map(book => { return { kind: book.Book_kind2 } })
+  let kind3 = await database.get('select distinct Book_kind3 from t_Book where Book_kind3 is not null')
+  kind3 = kind3.map(book => { return { kind: book.Book_kind3 } })
+  tags = [...new Set([...kind1, ...kind2, ...kind3])]
   res.render('index', {
     products: products,
     startPage: 1,
+    tags: tags,
     isFirst: true
   })
 })
@@ -32,7 +30,44 @@ router.get('/:page(\\d+)/', (req, res) => {
   res.render('index', {
     products: products,
     startPage: curPage,
+    tags: tags,
     isFirst: false
+  })
+})
+
+router.get('/searchBooks', async (req, res) => {
+  let sql = 'select * from t_Book where'
+  const tag = req.query.tagContent
+  const search = req.query.searchContent
+  let needAnd = false
+  if (tag !== '') {
+    sql += ` "${tag}" in (Book_kind1, Book_kind2, Book_kind3)`
+    needAnd = true
+  }
+  if (search !== '') {
+    if (needAnd === true) {
+      sql += ' and'
+    }
+    sql += ` Book_name like "%${search}%"`
+  }
+  const searchBooks = await database.get(sql)
+  console.log(searchBooks)
+  res.render('index', {
+    products: searchBooks,
+    startPage: 1,
+    tags: tags,
+    isFirst: false
+  })
+})
+
+router.get('/admin', (req, res) => {
+  res.sendfile('./public/pages/admin_login.html')
+})
+
+router.get('/adminManage', async (req, res) => {
+  const quests = await database.get('select * from t_Quest')
+  res.render('admin_manage', {
+    quests: quests
   })
 })
 
@@ -102,6 +137,17 @@ router.post('/loginReq', async (req, res) => {
     res.cookie('usernum', usernum, {
       maxAge: 1000 * 3600 * 24 * 2 // 2 days
     })
+    res.json({ code: 0 })
+  }
+})
+
+router.post('/adminLoginReq', async (req, res) => {
+  const username = req.body.username
+  const password = req.body.password
+  const result = await database.get('select * from t_Admin where Admin_account = ? and Admin_pass = password(?)', [username, password])
+  if (result.length === 0) {
+    res.json({ code: -1 })
+  } else {
     res.json({ code: 0 })
   }
 })
@@ -239,6 +285,12 @@ router.post('/updateStock', (req, res) => {
   const booknum = req.body.booknum
   const stock = req.body.stock
   database.put('update t_Book set Book_stock = ? where Book_num = ?', [stock, booknum])
+  res.json('ok')
+})
+
+router.post('/updateQuest', (req, res) => {
+  const num = req.body.questNum
+  database.put('update t_Quest set Quest_status = "handled" where Quest_num = ?', [num])
   res.json('ok')
 })
 

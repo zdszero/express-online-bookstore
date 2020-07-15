@@ -51,7 +51,7 @@ router.get('/searchBooks', async (req, res) => {
     sql += ` Book_name like "%${search}%"`
   }
   const searchBooks = await database.get(sql)
-  console.log(searchBooks)
+  // console.log(searchBooks)
   res.render('index', {
     products: searchBooks,
     startPage: 1,

@@ -108,6 +108,9 @@
       <% if (isFirst) { %>
       layer.msg('welcome')
       <% } %>
+      <% if (products.length === 0) { %>
+      layer.msg('books not found')
+      <% } %>
       laypage.render({
         elem: 'pager'
         ,curr: <%= startPage %>

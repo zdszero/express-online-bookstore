@@ -239,6 +239,7 @@
             type: 'post',
             dataType: 'text',
             success: (data) => {
+              console.log(data)
               const book = JSON.parse(data)
               cart.push(book)
               UI.addCartItem(book)
@@ -442,10 +443,10 @@
         document.addEventListener('DOMContentLoaded', () => {
           Database.setCart(() => {
             cart.forEach(item => {
-              registerLater()
               UI.addCartItem(item)
             })
             UI.setCartValue()
+            registerLater()
           })
         })
     </script>

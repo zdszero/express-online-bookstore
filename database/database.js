@@ -69,15 +69,13 @@ function addBook (data) {
 }
 
 function addComment (data) {
-  const sql = `insert into t_Comment(User_num, Store_num, Order_num, Comment_ID, Comment_kind, Comment_status, Comment_detail, Comment_mark)
-               values(?,?,?,?,?,?,?,?)`
+  const sql = `insert into t_Comment(User_num, Store_num, Order_num, Comment_ID,  Comment_detail, Comment_mark)
+               values(?,?,?,?,?,?)`
   const todo = [
     data.User_num,
     data.Store_num,
     data.Order_num,
     randomID(),
-    data.Comment_kind,
-    data.Comment_status,
     data.Comment_detail,
     data.Comment_mark
   ]

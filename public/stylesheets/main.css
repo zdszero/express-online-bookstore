@@ -84,6 +84,12 @@ body {
   text-align: right;
   font-size: 14px;
   width: 150px;
+  cursor: pointer;
+}
+
+.open-tag,
+.search {
+  cursor: pointer;
 }
 
 .cart-btn {

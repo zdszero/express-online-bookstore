@@ -11,12 +11,14 @@ var tags = []
 router.get('/', async function (req, res, next) {
   products = await database.get('select * from t_Book')
   let kind1 = await database.get('select distinct Book_kind1 from t_Book')
-  kind1 = kind1.map(book => { return { kind: book.Book_kind1 } })
+  kind1 = kind1.map(book => { return book.Book_kind1 })
   let kind2 = await database.get('select distinct Book_kind2 from t_Book where Book_kind2 is not null')
-  kind2 = kind2.map(book => { return { kind: book.Book_kind2 } })
+  kind2 = kind2.map(book => { return book.Book_kind2 })
   let kind3 = await database.get('select distinct Book_kind3 from t_Book where Book_kind3 is not null')
-  kind3 = kind3.map(book => { return { kind: book.Book_kind3 } })
+  kind3 = kind3.map(book => { return book.Book_kind3 })
   tags = [...new Set([...kind1, ...kind2, ...kind3])]
+  tags.sort()
+  tags = tags.map(tag => { return { kind: tag } })
   res.render('index', {
     products: products,
     startPage: 1,
@@ -115,10 +117,12 @@ router.get('/hello/:name', (req, res) => {
 
 router.get('/bookHome/:booknum', async (req, res) => {
   const booknum = req.params.booknum
-  console.log(booknum)
   const bookInfo = await database.get('select * from t_Book where Book_num = ?', [booknum])
-  console.log(bookInfo[0])
-  res.render('book_home', { book: bookInfo[0] })
+  const comments = await database.get('select Comment_mark, Comment_detail from `t_Comment` inner join `t_Order`on `t_Comment`.`Order_num` = `t_Order`.`Order_num` where `Book_num` = ?;', [booknum])
+  res.render('book_home', {
+    book: bookInfo[0],
+    comments: comments
+  })
 })
 
 router.get('/addBookPage', (req, res) => {
@@ -221,6 +225,23 @@ router.post('/addQuest', async (req, res) => {
   }
   database.addQuest(data)
   res.json('ok')
+})
+
+router.post('/addComment', async (req, res) => {
+  const orderInfo = await database.get('select * from t_Order where User_num = ?', [req.cookies.usernum])
+  if (orderInfo.length === 0) {
+    res.json({ code: 1 })
+  } else {
+    const data = {
+      User_num: req.cookies.usernum,
+      Store_num: req.body.Store_num,
+      Order_num: orderInfo[0].Order_num,
+      Comment_detail: req.body.Comment_detail,
+      Comment_mark: req.body.Comment_mark
+    }
+    database.addComment(data)
+    res.json({ code: 0 })
+  }
 })
 
 router.post('/setCart', async (req, res) => {

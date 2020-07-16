@@ -70,6 +70,12 @@ textarea {
 button.submit {
   font-size: 15px;
 }
+
+.comment-show {
+  position: relative;
+  left: 20px;
+  text-align: left;
+}
   </style>
 
 </head>
@@ -110,26 +116,74 @@ button.submit {
         your mark:
         <div id="star"></div><br>
         your comment:<br>
-        <textarea cols="130" rows="2" placeholder="comment should be less than 200 characters"></textarea>
-        <button class="submit">submit</button>
+        <textarea class="comment-area" cols="130" rows="2" placeholder="comment should be less than 200 characters"></textarea>
+        <button class="add-comment">submit</button>
       </div>
     </div>
   </div>
 </div>
+<!-- comment area -->
+<div class="comment-show">
+  <% for (let i = 0; i < comments.length; i++) { %>
+  <b>comment <%= i+1 %></b>
+  <p>rating: <%= comments[i].Comment_mark %></p>
+  <p>detail: <%= comments[i].Comment_detail %></p><br>
+  <% } %>
+</div>
+<!-- end of comment area -->
 
 <script src="../layui/layui.all.js"></script>
 <script>
-layui.use(['rate'], function () {
-  var rate = layui.rate;
-  rate.render({
-    elem: '#star'
+  var Store_num = <%= book.Store_num %>
+  var layer = layui.layer
+  var rating = -1
+  layui.use(['rate'], function () {
+    var rate = layui.rate;
+    rate.render({
+      elem: '#star'
+      ,choose: (value) => {
+        rating = value * 2
+      }
+    })
   })
-})
 
-layui.use('element', function(){
-  var $ = layui.jquery
-  ,element = layui.element;
-});
+  layui.use('element', function(){
+    var $ = layui.jquery
+    ,element = layui.element;
+  });
+
+  $('.add-comment').click(() => {
+    if (rating === -1) {
+      layer.msg('rate cannot be empty')
+      return
+    }
+    const comment = $('.comment-area').val()
+    if (comment === '') {
+      layer.msg('comment cannot be empty')
+      return
+    }
+    $.ajax({
+      url: '/addComment',
+      data: {
+        // Comment_num
+        // User_num
+        Store_num: Store_num,
+        // Order_num
+        // Comment_ID
+        Comment_detail: comment,
+        Comment_mark: rating
+      },
+      type: 'post',
+      dataType: 'json',
+      success: (data) => {
+        if (data.code === 1) {
+          layer.msg('you have not ordered this book yet')
+        } else {
+          layer.msg('ok')
+        }
+      }
+    })
+  })
 </script>
 </body>
 </html>

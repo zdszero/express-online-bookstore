@@ -56,7 +56,7 @@
     <!-- products -->
     <section class="produces-center">
       <div class="section-title">
-        <h2>our books</h2>
+        <h2 id="book-postion">our books</h2>
       </div>
       <div class="products-center">
         <% for (let i = (startPage - 1) * 18; i < products.length && i < startPage * 18; i++) { %>
@@ -327,6 +327,10 @@
 
 
       /* === REGISTER EVENTS === */
+      // shop now
+      $('.banner-btn').click(() => {
+        window.location.href = "#book-postion"
+      })
       // toggle tags
       $('.open-tag').click(() => {
         if ($('.floating').css('left') === '300px') {

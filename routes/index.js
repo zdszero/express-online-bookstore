@@ -228,7 +228,9 @@ router.post('/addQuest', async (req, res) => {
 })
 
 router.post('/addComment', async (req, res) => {
-  const orderInfo = await database.get('select * from t_Order where User_num = ?', [req.cookies.usernum])
+  console.log(req.body.booknum)
+  const orderInfo = await database.get('select * from t_Order where User_num = ? and Book_num = ?', [req.cookies.usernum, req.body.booknum])
+  console.log(orderInfo)
   if (orderInfo.length === 0) {
     res.json({ code: 1 })
   } else {

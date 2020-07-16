@@ -165,11 +165,8 @@ button.submit {
     $.ajax({
       url: '/addComment',
       data: {
-        // Comment_num
-        // User_num
+        booknum: <%= book.Book_num %>,
         Store_num: Store_num,
-        // Order_num
-        // Comment_ID
         Comment_detail: comment,
         Comment_mark: rating
       },
@@ -180,6 +177,7 @@ button.submit {
           layer.msg('you have not ordered this book yet')
         } else {
           layer.msg('ok')
+          location.reload()
         }
       }
     })

@@ -2,15 +2,13 @@
 
 an online bookstore build on express and mariadb
 
-#### scrennshots
+## scrennshots
 
-![scrennshot](./screenshot/bcg1.png "screenshot1")
+![index](img/index.png)
 
-![scrennshot](./screenshot/bcg2.png "screenshot2")
+![books](img/books.png)
 
-![scrennshot](./screenshot/bcg3.png "screenshot3")
-
-#### directory
+## directory
 
 ```
 |- api/     captcha function
@@ -21,18 +19,30 @@ an online bookstore build on express and mariadb
 app.js      express standard module
 ```
 
-#### how to deploy
+## how to deploy
 
-+ database
++ build project database
 
 ```sql
-// first connect to your mysql or mariadb
+/* first connect to your mysql or mariadb */
 create database bookhub;
 use bookhub;
 source {path to the project directory}/database/database.sql
 ```
 
-+ project
+then edit the `database/database.js`, change the username and password of your database admin
+
+```javascript
+var conn = mysql.createConnection({
+  host: 'localhost',
+  user: 'zds',
+  password: 'zds',
+  database: 'bookhub'
+})
+```
+
+
++ run the project
 
 make sure you have nodemon installed or you should edit the package.json
 
